@@ -80,3 +80,15 @@ with col2:
 st.divider()
 st.subheader("Detailed Facility Inventory")
 st.dataframe(df[['name', 'province', 'vials', 'phone']], use_container_width=True, hide_index=True)
+# --- FOOTER: MVP DISCLAIMER ---
+st.divider()
+with st.expander("ℹ️ Technical Note: Prototype Status"):
+    st.write("""
+    **This interface is a Functional MVP (Minimum Viable Product) developed for demonstration purposes.**
+    
+    Upon project approval, the production-grade system will feature:
+    *   **Advanced UI/UX**: Transition to a high-performance **NextJS / React Native** mobile architecture.
+    *   **Enterprise Security**: Full OAuth2 authentication and POPIA-compliant data encryption.
+    *   **API Integration**: Direct live-sync with the National Health Laboratory Service (NHLS) and Provincial medical databases.
+    *   **Offline Support**: Specialized 'low-connectivity' mode for rural medical officers.
+    """)
