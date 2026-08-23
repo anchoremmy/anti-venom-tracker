@@ -27,8 +27,8 @@ except Exception as e:
 # --- 🚨 EMERGENCY ALERT SYSTEM ---
 critical_hospitals = df_base[df_base['vials'] == 0]['name'].tolist()
 if critical_hospitals:
-    st.error(f"🚨 CRITICAL DEPLETION: {len(critical_hospitals)} facilities have 0 vials!")
-    st.components.v1.html("""<audio autoplay><source src="https://www.soundjay.com" type="audio/mpeg"></audio>""", height=0)
+    st.error(f"🚨 CRITICAL DEPLETION: {len(critical_hospitals)} facilities have 0 vials!")    
+    st.components.v1.html("""<audio autoplay><source src="https://www.soundjay.com/buttons/sounds/button-4.mp3" type="audio/mpeg"></audio>""", height=0)
 
 # --- SIDEBAR CONTROL PANEL ---
 st.sidebar.header("🕹️ Control Panel")
