@@ -59,16 +59,19 @@ with col1:
     map_df['color'] = map_df['vials'].apply(lambda x: [0, 255, 0, 160] if x > 0 else [255, 0, 0, 160])
     
     layers = []
-    if show_heatmap:
+        if show_heatmap:
         heatmap_data = map_df.copy()
         
-        # This creates a smooth, glowing heatmap that works on mobile devices
+        # 💡 INVERSE LOGIC: Subtract current stock from a baseline max capacity (e.g., 20 vials)
+        # This forces facilities with 0 vials to have the highest risk weight (20)!
+        heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: max(0, 20 - x))
+        
         layers.append(pdk.Layer(
             "HeatmapLayer",
             data=heatmap_data, 
             get_position="[lon, lat]", 
-            get_weight="vials",        # <-- Driven by your live vial stock counts!
-            radius_pixels=80,          # <-- Blurs the points together beautifully
+            get_weight="risk_weight",    # <-- Uses our new inverse calculation!
+            radius_pixels=80,          
             intensity=1.5,
             threshold=0.03
         ))
