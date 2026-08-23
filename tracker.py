@@ -59,19 +59,19 @@ with col1:
     map_df['color'] = map_df['vials'].apply(lambda x: [0, 255, 0, 160] if x > 0 else [255, 0, 0, 160])
     
     layers = []
-            if show_heatmap:
-                heatmap_data = map_df.copy()
-                heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: max(0, 20 - x))
+    if show_heatmap:
+        heatmap_data = map_df.copy()
+        heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: max(0, 20 - x))
 
-                layers.append(pdk.Layer(
-                    "HeatmapLayer",
-                    data=heatmap_data, 
-                    get_position="[lon, lat]", 
-                    get_weight="risk_weight",    # <-- Uses our new inverse calculation!
-                    radius_pixels=80,          
-                    intensity=1.5,
-                    threshold=0.03
-                ))
+        layers.append(pdk.Layer(
+            "HeatmapLayer",
+            data=heatmap_data, 
+            get_position="[lon, lat]", 
+            get_weight="risk_weight",    # <-- Uses our new inverse calculation!
+            radius_pixels=80,          
+            intensity=1.5,
+            threshold=0.03
+        ))
 
     
     layers.append(pdk.Layer('ScatterplotLayer', data=map_df, get_position='[lon, lat]', get_color='color', get_radius=30000, pickable=True))
