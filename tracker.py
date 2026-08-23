@@ -61,17 +61,21 @@ with col1:
     layers = []
     if show_heatmap:
         heatmap_data = map_df.copy()
-        heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: max(0, 20 - x))
-
+        
+        # Calculate a dynamic radius size: Lower stock makes a larger radius circle!
+        # Chris Hani (0 vials) gets a huge 60km warning ring. Grey's Hospital (15 vials) gets a tiny 10km ring.
+        heatmap_data['risk_radius'] = heatmap_data['vials'].apply(lambda x: max(10000, (20 - x) * 3000))
+        
+        # Transparent Alert Ring Layer (Works perfectly on mobile phones)
         layers.append(pdk.Layer(
-            "HeatmapLayer",
-            data=heatmap_data, 
-            get_position="[lon, lat]", 
-            get_weight="risk_weight",    # <-- Uses our new inverse calculation!
-            radius_pixels=80,          
-            intensity=1.5,
-            threshold=0.03
+            "ScatterplotLayer",
+            data=heatmap_data,
+            get_position="[lon, lat]",
+            get_color="[255, 0, 0, 80]",     # Semi-transparent red danger zone
+            get_radius="risk_radius",        # Dynamically sized based on shortage severity!
+            pickable=False
         ))
+
 
     
     layers.append(pdk.Layer('ScatterplotLayer', data=map_df, get_position='[lon, lat]', get_color='color', get_radius=30000, pickable=True))
