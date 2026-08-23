@@ -60,20 +60,17 @@ with col1:
     
     layers = []
     if show_heatmap:
-        # 1. We create a copy of your live database records
         heatmap_data = map_df.copy()
         
-        # 2. Add a dynamic weight column (e.g., higher risk where vials are low or zero)
-        heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: 2.0 if x == 0 else 0.5)
-        
-        # 3. Feed the dynamic data directly into the ScreenGridLayer
+        # This creates a smooth, glowing heatmap that works on mobile devices
         layers.append(pdk.Layer(
-            "ScreenGridLayer", 
-            data=heatmap_data,          # <-- Uses live database records now!
+            "HeatmapLayer",
+            data=heatmap_data, 
             get_position="[lon, lat]", 
-            get_weight="risk_weight",   # <-- Driven by your inventory metrics
-            cell_size_pixels=40, 
-            opacity=0.4
+            get_weight="vials",        # <-- Driven by your live vial stock counts!
+            radius_pixels=80,          # <-- Blurs the points together beautifully
+            intensity=1.5,
+            threshold=0.03
         ))
 
     
