@@ -60,8 +60,22 @@ with col1:
     
     layers = []
     if show_heatmap:
-        hotspots = pd.DataFrame({'lat': [-28.5, -23.5, -29.8], 'lon': [31.5, 29.8, 30.5], 'w': [1.0, 1.2, 0.8]})
-        layers.append(pdk.Layer("HeatmapLayer", data=hotspots, get_position="[lon, lat]", get_weight="w", radius_pixels=80, opacity=0.3))
+        # 1. We create a copy of your live database records
+        heatmap_data = map_df.copy()
+        
+        # 2. Add a dynamic weight column (e.g., higher risk where vials are low or zero)
+        heatmap_data['risk_weight'] = heatmap_data['vials'].apply(lambda x: 2.0 if x == 0 else 0.5)
+        
+        # 3. Feed the dynamic data directly into the ScreenGridLayer
+        layers.append(pdk.Layer(
+            "ScreenGridLayer", 
+            data=heatmap_data,          # <-- Uses live database records now!
+            get_position="[lon, lat]", 
+            get_weight="risk_weight",   # <-- Driven by your inventory metrics
+            cell_size_pixels=40, 
+            opacity=0.4
+        ))
+
     
     layers.append(pdk.Layer('ScatterplotLayer', data=map_df, get_position='[lon, lat]', get_color='color', get_radius=30000, pickable=True))
     
